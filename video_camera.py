@@ -1,43 +1,12 @@
+
 import cv2
 import numpy as np
 
 
-# 摄像头设置
-def gstreamer_pipeline(
-    capture_width=640,
-    capture_height=480,
-    display_width=640,
-    display_height=480,
-    framerate=20,
-    flip_method=0,
-):
-    return (
-        "nvarguscamerasrc ! "
-        "video/x-raw(memory:NVMM), "
-        "width=(int)%d, height=(int)%d, "
-        "format=(string)NV12, framerate=(fraction)%d/1 ! "
-        "nvvidconv flip-method=%d ! "
-        "video/x-raw, width=(int)%d, height=(int)%d, format=(string)BGRx ! "
-        "videoconvert ! "
-        "video/x-raw, format=(string)BGR ! appsink"
-        % (
-            capture_width,
-            capture_height,
-            framerate,
-            flip_method,
-            display_width,
-            display_height,
-        )
-    )
 
 # 第一步：使用cv2.VideoCapture读取视频
 # camera = cv2.VideoCapture('/home/hc/file_jj/特征工程检测视频/24.mp4')
-camera = cv2.VideoCapture(gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
-# 判断视频是否打开
-if (camera.isOpened()):
-    print('已获取到视频')
-else:
-    print('未获取到视频')
+camera = cv2.VideoCapture(0)
 
 size = (int(camera.get(cv2.CAP_PROP_FRAME_WIDTH)),
         int(camera.get(cv2.CAP_PROP_FRAME_HEIGHT)))
@@ -110,7 +79,6 @@ while (True):
         break
 
 
-cap.release()
+camera.release()
 out.release()
 cv2.destroyAllWindows()
-
